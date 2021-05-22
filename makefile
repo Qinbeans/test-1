@@ -1,7 +1,8 @@
 CC = clang++
 BUILD = bin
 TARG := $(BUILD)
-FILE := test
+DATE = $(shell date '+%Y-%m-%d' )
+FILE := test-$(DATE)
 CFLAG := -std=c++17 -Ofast -I include
 LFLAG := -lpthread -lraylib -lenet 
 
@@ -37,11 +38,12 @@ clean:
 	rm $(TARG)
 
 updategit:
-	git add ./bin ./src
-	git commit -m "Updating sources and bins"
-	git remote add origin git@github.com:qinbeans/pixel-boi
+	git commit -m "Updating sources $(DATE)"
 	git push -u origin master
 
 getinfo:
 	echo $(OS)
 	echo $(PLAT)
+
+date:
+	echo $(DATE)
