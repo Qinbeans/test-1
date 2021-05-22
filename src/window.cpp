@@ -74,6 +74,9 @@ void window::init(){
 
 void window::update(){
    delta = get_delta(scale,SPD);
+   move(camera.target.x,camera.target.y,delta);
+   //static layer for self player and buttons
+   BeginScissorMode(0,0,width,height);
    #pragma omp parallel for
    for(short i = 0; i < bound_len; i++){
       if(draw_lblb(styles[i],BLACK)){
@@ -82,5 +85,7 @@ void window::update(){
       }
       // printStyle(labels[i],styles[i]); //debug
    }
+   //draw stats
+   EndScissorMode();
 }
 
