@@ -29,6 +29,20 @@ bool draw_lblb(Style style, Color frame_color){
    return GuiLabelButton(style.frame, style.name);
 }
 
+bool draw_lbl(Style style, Color frame_color){
+   DrawRectangleRec(style.frame, frame_color);
+   GuiSetStyle(DEFAULT,TEXT_SIZE,style.font);
+   GuiSetStyle(DEFAULT,TEXT_SPACING,style.spacing);
+   GuiSetStyle(LABEL, TEXT_ALIGNMENT, style.align);
+   GuiSetStyle(LABEL, TEXT + (guiState*3), style.color);
+   GuiLabel(style.frame,style.name);
+}
+
+void set_style_name(Style& style, char* name){
+   style.name = (char*)malloc(strlen(name));
+   strcpy(style.name,name);
+}
+
 void printStyle(Style style){
    printf("Name: %s | Font: %f| Spacing: %f| Align: %d | Color: %d | Rectangle:\n\t{ X: %f| Y: %f | Width: %f | Height: %f }\n",style.name,style.font,style.spacing,style.align,style.color,style.frame.x,style.frame.y,style.frame.width,style.frame.height);
 }
@@ -43,4 +57,10 @@ Vector2 get_delta(float scale, float speed){
 void move(float& x, float& y, Vector2& delta){
    x+=delta.x;
    y+=delta.y;
+}
+
+char* to_string(float num){
+   char* str = (char*)malloc(10);//will do max of 10 digits
+   sprintf(str,"%f",num);
+   return str;
 }

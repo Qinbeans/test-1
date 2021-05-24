@@ -14,23 +14,53 @@
 
 #define MAX_LEN 100
 
-#include "tool.h"
+#include "player.h"
 
 //rather object like, but I don't see any benefits turning this into an object besides neatness
 
+/**
+ * @brief Window Object for creating window
+ * 
+ */
 class window{
    public:
+
+      /**
+       * @brief Construct a new
+       * window object
+       * 
+       */
       window();
+
+      /**
+       * @brief starts the window
+       * 
+       */
       void start();
+
+      /**
+       * @brief intitializes
+       * important calculations
+       * 
+       */
       void init();
+
+      /**
+       * @brief Updates window
+       * 
+       */
       void update();
    private:
-      float width;
-      float height;
+      Win_data wdata;
+      Stats stats;
+      player* me;
+      int width;
+      int height;
       float scale;
       char* name;
       Camera2D camera;
       Vector2 delta;
+      float dT;//delta Time checks time it took to finish frame
       Rectangle2D rect_bounds[MAX_LEN];
       Style styles[MAX_LEN];
       char* labels[MAX_LEN];

@@ -78,6 +78,24 @@ typedef struct Style{
 bool draw_lblb(Style style, Color frame_color);
 
 /**
+ * @brief draws label from style and color
+ * 
+ * @param style 
+ * @param frame_color 
+ * @return true 
+ * @return false 
+ */
+bool draw_lbl(Style style, Color frame_color);
+
+/**
+ * @brief Set the style name
+ * 
+ * @param style 
+ * @param name 
+ */
+void set_style_name(Style& style, char* name);
+
+/**
  * @brief prints the style for debugging
  * 
  * @param style 
@@ -97,6 +115,29 @@ void printStyle(Style style);
  */
 void lbl_style(Style& style,const char* name, float font, float spacing,int align, int color, Rectangle2D frame);
 
+/**
+ * @brief Calculates delta value
+ * based on speed and scale
+ * 
+ * @param scale 
+ * @param speed 
+ * @return Vector2 
+ */
 Vector2 get_delta(float scale, float speed);
 
+/**
+ * @brief moves an pos by delta
+ * 
+ * @param x 
+ * @param y 
+ * @param delta 
+ */
 void move(float& x, float& y, Vector2& delta);
+
+/**
+ * @brief makes a string from a float
+ * 
+ * @param num 
+ * @return char* 
+ */
+char* to_string(float num);

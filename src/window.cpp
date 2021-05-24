@@ -14,6 +14,10 @@
  * TODO: Use a new grid made by the server
  * to keep track of position and send delta
  * to change position
+ * All positions from the server are
+ * subtracted from our pos to get relative
+ * pos of other players
+ * 
  */
 
 #include "window.h"
@@ -29,11 +33,25 @@
 
 window::window(){
    printf("<Filling Windows object>\n");
-   width = 800.0f;
-   height = 800.0f;
+   width = 800;//temp
+   height = 800;//temp
    name = (char*)malloc(strlen("Default"));
    strcpy(name,"Default");
    scale = height/80;
+   wdata.width = width;
+   wdata.height = height;
+   wdata.scale = scale;
+   //temp
+   stats.name = (char*)malloc(4);
+   strcpy(stats.name,"NULL");
+   strcpy(stats.id,"000001");
+   stats.xp = 0;
+   stats.speed = SPD;
+   stats.health = 1;
+   stats.armor = 0;
+   stats.range = 1;
+   stats.damage = 1;
+   
    bound_len = 0;
    current = -1;
    camera = {{0,0},{0,0},0,1};
@@ -70,13 +88,14 @@ void window::init(){
    //button 4: red
    lbl_style(styles[3],"Red",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{scale,scale*10,scale*10,scale*2.5f});
    bound_len++;
+   me = new player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
 }
 
 void window::update(){
    delta = get_delta(scale,SPD);
-   move(camera.target.x,camera.target.y,delta);
+   me->move(delta);
+   me->draw();
    //static layer for self player and buttons
-   BeginScissorMode(0,0,width,height);
    #pragma omp parallel for
    for(short i = 0; i < bound_len; i++){
       if(draw_lblb(styles[i],BLACK)){
@@ -86,6 +105,5 @@ void window::update(){
       // printStyle(labels[i],styles[i]); //debug
    }
    //draw stats
-   EndScissorMode();
 }
 

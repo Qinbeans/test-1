@@ -47,3 +47,7 @@ getinfo:
 
 date:
 	echo $(DATE)
+
+init:
+	mkdir $(BUILD)
+	mkdir $(BUILD)/$(PLAT)
