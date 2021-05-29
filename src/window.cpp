@@ -11,7 +11,7 @@
 
 /**
  * 05/21/21 - Ryan Fong
- * TODO: Use a new grid made by the server
+ * TODO:(COMPLETE 05/29/21) Use a new grid made by the server
  * to keep track of position and send delta
  * to change position
  * All positions from the server are
@@ -23,8 +23,8 @@
 #include "window.h"
 #include "raylib.h"
 #include "raygui.h"
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define MAX_CHUNK 50
@@ -35,15 +35,13 @@ window::window(){
    printf("<Filling Windows object>\n");
    width = 800;//temp
    height = 800;//temp
-   name = (char*)malloc(strlen("Default"));
-   strcpy(name,"Default");
+   name = "Default";
    scale = height/80;
    wdata.width = width;
    wdata.height = height;
    wdata.scale = scale;
    //temp
-   stats.name = (char*)malloc(4);
-   strcpy(stats.name,"NULL");
+   stats.name = "NULL";
    strcpy(stats.id,"000001");
    stats.xp = 0;
    stats.speed = SPD;
@@ -53,14 +51,14 @@ window::window(){
    stats.damage = 1;
    
    bound_len = 0;
-   current = -1;
+   current = 3;
    camera = {{0,0},{0,0},0,1};
 }
 
 void window::start(){
    printf("<Initializing...>\n");
    init();
-   InitWindow(800,800,"Test");
+   InitWindow(800,800,name);
    SetTargetFPS(60);
    while(!WindowShouldClose()){
       BeginDrawing();
@@ -92,6 +90,7 @@ void window::init(){
 }
 
 void window::update(){
+   
    delta = get_delta(scale,SPD);
    me->move(delta);
    me->draw();
@@ -101,6 +100,24 @@ void window::update(){
       if(draw_lblb(styles[i],BLACK)){
          current = i;
          printf("<%d has been clicked>\n",i);
+         switch(current){
+            case 0:{
+               me->set_color(PURPLE);
+               break;
+            }
+            case 1:{
+               me->set_color(BLUE);
+               break;
+            }
+            case 2:{
+               me->set_color(WHITE);
+               break;
+            }
+            case 3:{
+               me->set_color(RED);
+               break;
+            }
+         }
       }
       // printStyle(labels[i],styles[i]); //debug
    }

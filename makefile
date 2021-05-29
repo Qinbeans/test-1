@@ -39,7 +39,7 @@ clean:
 
 updategit:
 	git commit -m "Updating sources $(DATE)"
-	git push -u origin master
+	git push
 
 getinfo:
 	echo $(OS)

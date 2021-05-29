@@ -57,7 +57,7 @@ class window{
       int width;
       int height;
       float scale;
-      char* name;
+      string name;
       Camera2D camera;
       Vector2 delta;
       float dT;//delta Time checks time it took to finish frame

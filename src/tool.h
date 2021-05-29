@@ -11,6 +11,7 @@
  * 
  */
 #include "raylib.h"
+#include "qstring.h"
 
 #ifdef __MACH__
 #define GAMEDIR ".2D_Game"
@@ -25,7 +26,7 @@
  * 
  */
 typedef struct Stats{
-   char* name;
+   string name;
    //6 digit ID, server check if
    //atoi(id) < 0 then it will
    //assign random number for ID
@@ -57,7 +58,7 @@ typedef struct Win_data{
  * 
  */
 typedef struct Style{
-   char* name;
+   string name;
    float font;
    float spacing;
    int align;
@@ -82,10 +83,8 @@ bool draw_lblb(Style style, Color frame_color);
  * 
  * @param style 
  * @param frame_color 
- * @return true 
- * @return false 
  */
-bool draw_lbl(Style style, Color frame_color);
+void draw_lbl(Style style, Color frame_color);
 
 /**
  * @brief Set the style name

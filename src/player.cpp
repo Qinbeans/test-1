@@ -44,3 +44,16 @@ char* player::get_str_apos(){
    sprintf(str,"(%.1f,%.1f)",pos_act.x/window->scale,pos_act.y/window->scale);
    return str;
 }
+
+void player::set_color(Color color){
+   this->color = color;
+   // if(ColorToInt(color)==ColorToInt(RED)){
+   //    printf("red");
+   // }else if(ColorToInt(color)==ColorToInt(BLUE)){
+   //    printf("blue");
+   // }else if(ColorToInt(color)==ColorToInt(PURPLE)){
+   //    printf("purple");
+   // }else if(ColorToInt(color)==ColorToInt(WHITE)){
+   //    printf("white");
+   // }
+}

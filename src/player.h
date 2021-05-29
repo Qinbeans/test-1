@@ -80,6 +80,8 @@ class player{
        * @return Vector2 
        */
       Vector2 get_apos() {return pos_act;};
+
+      void set_color(Color color);
    private:
       Color color;
       Vector2 pos_act;//position within server.  Same as pos initially
