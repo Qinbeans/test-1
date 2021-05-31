@@ -14,7 +14,8 @@
 #include "raylib.h"
 #include "raygui.h"
 
-void lbl_style(Style& style,const char* name, float font, float spacing,int align, int color, Rectangle2D frame){
+
+void lbl_style(Style& style,string name, float font, float spacing,int align, int color, Rectangle2D frame){
    style = {name,font,spacing,align,color,frame};
 }
 
@@ -24,7 +25,7 @@ bool draw_lblb(Style style, Color frame_color){
    GuiSetStyle(DEFAULT,TEXT_SPACING,style.spacing);
    GuiSetStyle(LABEL, TEXT_ALIGNMENT, style.align);
    GuiSetStyle(LABEL, TEXT + (guiState*3), style.color);
-   return GuiLabelButton(style.frame, style.name);
+   return GuiLabelButton(style.frame, style.name.c_str());
 }
 
 void draw_lbl(Style style, Color frame_color){
@@ -33,15 +34,15 @@ void draw_lbl(Style style, Color frame_color){
    GuiSetStyle(DEFAULT,TEXT_SPACING,style.spacing);
    GuiSetStyle(LABEL, TEXT_ALIGNMENT, style.align);
    GuiSetStyle(LABEL, TEXT + (guiState*3), style.color);
-   GuiLabel(style.frame,style.name);
+   GuiLabel(style.frame,style.name.c_str());
 }
 
-void set_style_name(Style& style, char* name){
+void set_style_name(Style& style, string name){
    style.name = name;
 }
 
 void printStyle(Style style){
-   printf("Name: %s | Font: %f| Spacing: %f| Align: %d | Color: %d | Rectangle:\n\t{ X: %f| Y: %f | Width: %f | Height: %f }\n",style.name.get_str(),style.font,style.spacing,style.align,style.color,style.frame.x,style.frame.y,style.frame.width,style.frame.height);
+   printf("Name: %s | Font: %f| Spacing: %f| Align: %d | Color: %d | Rectangle:\n\t{ X: %f| Y: %f | Width: %f | Height: %f }\n",style.name.c_str(),style.font,style.spacing,style.align,style.color,style.frame.x,style.frame.y,style.frame.width,style.frame.height);
 }
 
 Vector2 get_delta(float scale, float speed){

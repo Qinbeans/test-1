@@ -25,7 +25,7 @@
 #include "raygui.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
 #define MAX_CHUNK 50
 //temp
@@ -58,7 +58,7 @@ window::window(){
 void window::start(){
    printf("<Initializing...>\n");
    init();
-   InitWindow(800,800,name);
+   InitWindow(800,800,name.c_str());
    SetTargetFPS(60);
    while(!WindowShouldClose()){
       BeginDrawing();

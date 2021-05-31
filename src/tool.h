@@ -11,7 +11,9 @@
  * 
  */
 #include "raylib.h"
-#include "qstring.h"
+#include <string>//using string since mine caused memory leaking
+
+using std::string;
 
 #ifdef __MACH__
 #define GAMEDIR ".2D_Game"
@@ -92,7 +94,7 @@ void draw_lbl(Style style, Color frame_color);
  * @param style 
  * @param name 
  */
-void set_style_name(Style& style, char* name);
+void set_style_name(Style& style, string name);
 
 /**
  * @brief prints the style for debugging
@@ -112,7 +114,7 @@ void printStyle(Style style);
  * @param color 
  * @param frame 
  */
-void lbl_style(Style& style,const char* name, float font, float spacing,int align, int color, Rectangle2D frame);
+void lbl_style(Style& style,string name, float font, float spacing,int align, int color, Rectangle2D frame);
 
 /**
  * @brief Calculates delta value
