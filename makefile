@@ -41,7 +41,7 @@ clean:
 	rm $(TARG)
 
 updategit:
-	git commit -m "Updating sources $(DATE)|$(TIME) by $(AUTHOR)"
+	git commit -m "Updating sources $(DATE) at $(TIME) by $(AUTHOR)"
 	git push
 
 getinfo:
