@@ -2,6 +2,8 @@ CC = clang++
 BUILD = bin
 TARG := $(BUILD)
 DATE = $(shell date '+%Y-%m-%d' )
+TIME = $(shell date '+%H:%M')
+AUTHOR = $(shell git var GIT_AUTHOR_IDENT | cut -d ' ' -f3)
 FILE := test-$(DATE)
 CFLAG := -std=c++17 -Ofast -I include
 LFLAG := -lpthread -lraylib -lenet 
@@ -39,7 +41,7 @@ clean:
 	rm $(TARG)
 
 updategit:
-	git commit -m "Updating sources $(DATE)"
+	git commit -m "Updating sources $(DATE)|$(TIME) by $(AUTHOR)"
 	git push
 
 getinfo:
