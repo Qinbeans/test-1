@@ -22,11 +22,12 @@
 
 #include "window.h"
 #include "raygui.h"
+#include <omp.h>
 #include <cstdlib>
-#include <future>
 #include <cstring>
 
 #define MAX_CHUNK 50
+#define MAX_THREAD 1
 
 //checks player's stats's id
 int cmpPlayers(const void* a1, const void* a2){
@@ -44,6 +45,7 @@ int cmpPlayers(const void* a1, const void* a2){
 window::window(){
    printf("<Enet initialized>\n<Filling Windows object>\n");
    name = "Default";
+   omp_set_num_threads(MAX_THREAD);
    bound_len = 0;
    current = 3;
    camera = {{0,0},{0,0},0,1};
@@ -77,8 +79,16 @@ void window::start(){
       BeginMode2D(camera);
       ClearBackground(GRAY);
       //makes drawing separate from polling
-      std::async(&window::network_poll,this);
-      update();
+      #pragma omp parallel 
+      {
+         #pragma omp sections nowait
+         {
+            #pragma omp section
+            network_poll();
+            #pragma omp section
+            update();
+         }
+      }
       EndMode2D();
       EndDrawing();
    }
