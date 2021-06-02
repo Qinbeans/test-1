@@ -9,6 +9,7 @@ LFLAG := -lpthread -lraylib -lenet
 ifeq ($(OS),Windows_NT)
 	CC := clang++
 	PLAT := Windows
+	CFLAG += -fopenmp
 	LFLAG += -Wl,--allow-multiple-definition -lopengl32 -lgdi32 -lwinmm -L lib/Windows -lws2_32 -fopenmp
 else
 	OS = $(shell uname -s)

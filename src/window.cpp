@@ -22,12 +22,12 @@
 
 #include "window.h"
 #include "raygui.h"
+#include <omp.h>
 #include <cstdlib>
 #include <cstring>
 
 #define MAX_CHUNK 50
-//temp
-#define SPD 1
+#define MAX_THREAD 2
 
 //checks player's stats's id
 int cmpPlayers(const void* a1, const void* a2){
@@ -45,10 +45,21 @@ int cmpPlayers(const void* a1, const void* a2){
 window::window(){
    printf("<Enet initialized>\n<Filling Windows object>\n");
    name = "Default";
-   
+   omp_set_num_threads(MAX_THREAD);
    bound_len = 0;
    current = 3;
    camera = {{0,0},{0,0},0,1};
+
+   //testing
+   //simultaneous multithreading
+   // #pragma omp parallel sections
+   // {
+   //    int thread = omp_get_thread_num();
+   //    #pragma omp section
+   //    printf("Thread: %d\n",thread);
+   //    #pragma omp section
+   //    printf("Thread?: %d\n",thread);
+   // }
 }
 
 void window::start(){
@@ -64,11 +75,20 @@ void window::start(){
    }
 
    while(!WindowShouldClose()){
-      network_poll();
       BeginDrawing();
       BeginMode2D(camera);
       ClearBackground(GRAY);
-      update();
+      #pragma omp parallel sections
+      {
+         #pragma omp section
+         {
+            network_poll();
+         }
+         #pragma omp section
+         {
+            update();
+         }
+      }
       EndMode2D();
       EndDrawing();
    }
@@ -90,28 +110,50 @@ void window::start(){
 }
 
 void window::init(){
-   //buttons are spread by 3 scales
-   //button 1: purple
-   lbl_style(styles[0],"Purple",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(PURPLE),{scale,scale,scale*10,scale*2.5f});
-   bound_len ++;
-   //button 2: blue
-   lbl_style(styles[1],"Blue",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(BLUE),{scale,scale*4,scale*10,scale*2.5f});
-   bound_len++;
-   //button 3: white
-   lbl_style(styles[2],"White",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{scale,scale*7,scale*10,scale*2.5f});
-   bound_len++;
-   //button 4: red
-   lbl_style(styles[3],"Red",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{scale,scale*10,scale*10,scale*2.5f});
-   bound_len++;
+   #pragma omp parallel sections
+   {
+      //buttons are spread by 3 scales
+      //button 1: purple
+      #pragma omp section
+      {
+         lbl_style(styles[0],"Purple",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(PURPLE),{scale,scale,scale*10,scale*2.5f});
+         bound_len ++;
+      }
+      //button 2: blue
+      #pragma omp section
+      {
+         lbl_style(styles[1],"Blue",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(BLUE),{scale,scale*4,scale*10,scale*2.5f});
+         bound_len++;
+      }
+      //button 3: white
+      #pragma omp section
+      {
+         lbl_style(styles[2],"White",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{scale,scale*7,scale*10,scale*2.5f});
+         bound_len++;
+      }
+      //button 4: red
+      #pragma omp section
+      {
+      lbl_style(styles[3],"Red",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{scale,scale*10,scale*10,scale*2.5f});
+      bound_len++;
+      }
+   }
    me = new player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
 }
 
 void window::update(){
-   
-   delta = get_delta(scale,SPD);
+   delta = get_delta(scale,me->get_stats()->speed);
    me->move(delta);
    me->draw();
    //static layer for self player and buttons
+   if(player_num > 0){
+      #pragma omp parallel for
+      for(short i = 0; i < player_num; i++){
+         // account for distance
+         // if(players[i].get_apos().x > 0 && players[i].get_apos().x < width && players[i].get_apos().y > 0 && players[i].get_apos().x < height)
+            players[i].draw();
+      }
+   }
    #pragma omp parallel for
    for(short i = 0; i < bound_len; i++){
       if(draw_lblb(styles[i],BLACK)){
@@ -282,7 +324,7 @@ string window::new_player(){
    inputs+=temp[0];
    inputs+=" ";
    inputs+=temp[1];
-   inputs+=" 1 0.0 1.0 0.5 0.1 0 0 0\0";
+   inputs+=" 0.0 1.0 0.5 0.1 0 0 0\0";
    free(temp[0]);
    free(temp[1]);
    return inputs;
