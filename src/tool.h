@@ -23,6 +23,9 @@ using std::string;
 #define GAMEDIR ".2Dgame"
 #endif
 
+
+#define MAX_DATA 15
+
 /**
  * @brief carries player stats
  * 
@@ -32,7 +35,7 @@ typedef struct Stats{
    //6 digit ID, server check if
    //atoi(id) < 0 then it will
    //assign random number for ID
-   char id[6];
+   string id;
    float xp;//xp
    float speed;//spd
    float health;//hp
@@ -89,6 +92,17 @@ bool draw_lblb(Style style, Color frame_color);
 void draw_lbl(Style style, Color frame_color);
 
 /**
+ * @brief draws textbox
+ * 
+ * @param style 
+ * @param frame_color 
+ * @param text 
+ * @param txt_len 
+ * @param edit_mode 
+ */
+void draw_txt(Style style, Color frame_color, char* text, int txt_len, bool edit_mode);
+
+/**
  * @brief Set the style name
  * 
  * @param style 
@@ -142,3 +156,7 @@ void move(float& x, float& y, Vector2& delta);
  * @return char* 
  */
 char* to_string(float num);
+
+void parse(string strong_data[MAX_DATA], const char delim, string data);
+
+void print_stats(Stats stats);

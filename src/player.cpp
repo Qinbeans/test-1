@@ -2,11 +2,8 @@
 #include "raygui.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-
-char* player::get_packet(){
-   return nullptr;
-}
+#include <sstream>
+#include <iomanip>
 
 
 player::player(){
@@ -21,10 +18,20 @@ player::player(Color color, Vector2 pos, Stats* stats, Win_data* window){
    this->color = color;
    radius = window->scale/2;
    this->pos = {pos.x-radius,pos.y-radius};
-   pos_act = pos;
+   pos_act = {0,0};
    this->stats = stats;
    this->window = window;
    lbl_style(apos_sty,get_str_apos(),window->scale,window->scale/4,GUI_TEXT_ALIGN_CENTER,ColorToInt(GREEN),{window->width-window->scale*11,window->scale*2.5f,window->scale*10,window->scale*1.5f});
+}
+
+player::~player(){
+   delete stats;
+   delete window;
+   color = GetColor(-1);
+   pos = {};
+   pos_act = {};
+   radius = -1;
+   apos_sty = {};
 }
 
 void player::move(Vector2 delta){
@@ -56,4 +63,8 @@ void player::set_color(Color color){
    // }else if(ColorToInt(color)==ColorToInt(WHITE)){
    //    printf("white");
    // }
+}
+
+string player::get_packet(){
+   return stats->name+" "+string(stats->id)+" "+std::to_string(stats->xp)+" "+std::to_string(stats->health)+" "+std::to_string(stats->speed)+" "+std::to_string(stats->range)+" "+std::to_string(pos_act.x/window->scale)+" "+std::to_string(pos_act.y/window->scale)+" "+std::to_string(ColorToInt(color));
 }

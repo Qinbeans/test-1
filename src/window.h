@@ -15,6 +15,7 @@
 #define MAX_LEN 100
 
 #include "player.h"
+#include <enet/enet.h>
 
 //rather object like, but I don't see any benefits turning this into an object besides neatness
 
@@ -50,6 +51,15 @@ class window{
        * 
        */
       void update();
+
+      bool connected();
+
+      void read_settings();
+      
+      string new_player();
+
+      void network_poll();
+
    private:
       Win_data wdata;
       Stats stats;
@@ -66,6 +76,15 @@ class window{
       char* labels[MAX_LEN];
       short bound_len;
       short current;
+      player* players;
+      int player_num;
+      string settings[MAX_DATA];
+      string saved_stats[MAX_DATA];
+
+      ENetHost* client;
+      ENetAddress address;
+      ENetPeer* peer;
+      ENetEvent event;
 };
 
 #endif

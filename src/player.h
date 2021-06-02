@@ -13,6 +13,7 @@
 #define PLAYER_H
 
 #include "tool.h"
+#include <iostream>
 #include <cstring>
 
 #define MAXDATA 10
@@ -42,14 +43,16 @@ class player{
       */
       player(Color color, Vector2 pos, Stats* stats, Win_data* window);
 
+      ~player();
+
       /**
       * @brief Gets the data of player 
       * in the form of char* to send 
       * to server.
       * 
-      * @return char* 
+      * @return string
       */
-      char* get_packet();
+      string get_packet();
       
       /**
       * @brief draws player on screen
@@ -82,6 +85,15 @@ class player{
       Vector2 get_apos() {return pos_act;};
 
       void set_color(Color color);
+
+      void set_apos(Vector2 pos){pos_act = pos;};
+
+      void set_stats(Stats in){stats = new Stats(in);};
+
+      bool operator==(player p2){return this->stats== p2.stats;};
+
+      Stats* get_stats() const {return stats;};
+
    private:
       Color color;
       Vector2 pos_act;//position within server.  Same as pos initially
