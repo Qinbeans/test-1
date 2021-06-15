@@ -63,17 +63,15 @@ class window{
    private:
       Win_data wdata;
       Stats stats;
-      player* me;
+      player me;
       int width;
       int height;
       float scale;
       string name;
-      Camera2D camera;
       Vector2 delta;
       float dT;//delta Time checks time it took to finish frame
       Rectangle2D rect_bounds[MAX_LEN];
       Style styles[MAX_LEN];
-      char* labels[MAX_LEN];
       short bound_len;
       short current;
       player* players;

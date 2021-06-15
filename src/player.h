@@ -92,7 +92,7 @@ class player{
 
       bool operator==(player p2){return this->stats== p2.stats;};
 
-      Stats* get_stats() const {return stats;};
+      Stats get_stats() const {return *stats;};
 
    private:
       Color color;

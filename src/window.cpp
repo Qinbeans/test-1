@@ -32,11 +32,11 @@
 int cmpPlayers(const void* a1, const void* a2){
    player p1 = *(const player*)a1;
    player p2 = *(const player*)a2;
-   if(p1.get_stats() == NULL && p1.get_stats() == NULL)
+   if(a1 == NULL && a2 == NULL)
       return 0;
-   if(p1.get_stats() == NULL || p1.get_stats()->id < p2.get_stats()->id)
+   if(a1 == NULL || p1.get_stats().id < p2.get_stats().id)
       return -1;
-   if(p2.get_stats() == NULL || p1.get_stats()->id > p2.get_stats()->id)
+   if(a2 == NULL || p1.get_stats().id > p2.get_stats().id)
       return 1;
    return 0;
 }
@@ -46,7 +46,7 @@ window::window(){
    name = "Default";
    bound_len = 0;
    current = 3;
-   camera = {{0,0},{0,0},0,1};
+   player_num = 0;
 
    //testing
    //simultaneous multithreading
@@ -59,11 +59,11 @@ window::window(){
    //    printf("Thread?: %d\n",thread);
    // }
 }
-
+// UNCOMMENT SOMETHING HERE
 void window::start(){
    printf("<Initializing...>\n");
    if(!connected()){
-      // exit(EXIT_FAILURE);
+      exit(EXIT_FAILURE); 
    }
    init();
    InitWindow(width,height,name.c_str());
@@ -74,12 +74,10 @@ void window::start(){
 
    while(!WindowShouldClose()){
       BeginDrawing();
-      BeginMode2D(camera);
       ClearBackground(GRAY);
       //makes drawing separate from polling
       std::async(&window::network_poll,this);
       update();
-      EndMode2D();
       EndDrawing();
    }
    Close_Window();
@@ -113,14 +111,14 @@ void window::init(){
    //button 4: red
    lbl_style(styles[3],"Red",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{scale,scale*10,scale*10,scale*2.5f});
    bound_len++;\
-   me = new player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
+   me = player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
 }
 
 void window::update(){
-   printf("<Updating screen>\n");
-   delta = get_delta(scale,me->get_stats()->speed);
-   me->move(delta);
-   me->draw();
+   // printf("<Updating screen>\n");
+   delta = get_delta(scale,me.get_stats().speed);
+   me.move(delta);
+   me.draw();
    //static layer for self player and buttons
    if(player_num > 0){
       for(short i = 0; i < player_num; i++){
@@ -135,19 +133,19 @@ void window::update(){
          printf("<%d has been clicked>\n",i);
          switch(current){
             case 0:{
-               me->set_color(PURPLE);
+               me.set_color(PURPLE);
                break;
             }
             case 1:{
-               me->set_color(BLUE);
+               me.set_color(BLUE);
                break;
             }
             case 2:{
-               me->set_color(WHITE);
+               me.set_color(WHITE);
                break;
             }
             case 3:{
-               me->set_color(RED);
+               me.set_color(RED);
                break;
             }
          }
@@ -183,14 +181,18 @@ bool window::connected(){
       int current_mon = GetCurrentMonitor();
       temp = "0 "+std::to_string(GetMonitorWidth(current_mon))+" "+std::to_string(GetMonitorHeight(current_mon))+" 60 67.166.153.136 25570 0 0 0 0\0";
       Close_Window();
-      SaveFileText(setfile.c_str(),(char*)temp.c_str());
+      char* filename = (char*)temp.c_str();
+      SaveFileText(setfile.c_str(),filename);
+      free(filename);
    }
    if(!FileExists(gamefile.c_str())){
       printf("<Game Data does not exists>\n");
       InitWindow(640,480,"Sign Up");
       temp = new_player();
       Close_Window();
-      SaveFileText(gamefile.c_str(),(char*)temp.c_str());
+      char* filename = (char*)temp.c_str();
+      SaveFileText(gamefile.c_str(),filename);
+      free(filename);
    }
    temp = LoadFileText(setfile.c_str());
    parse(settings,32,temp);
@@ -218,7 +220,7 @@ bool window::connected(){
       switch(event.type){
          case ENET_EVENT_TYPE_CONNECT:{
             printf("<Connected to %d:%d>\n",address.host,address.port);
-            string data = "0 "+me->get_packet();
+            string data = "0 "+me.get_packet();
             ENetPacket* user = enet_packet_create(data.c_str(), data.size()+1,ENET_PACKET_FLAG_RELIABLE);
             enet_peer_send(peer, 0, user);
             return true;
@@ -331,7 +333,7 @@ void window::network_poll(){
                }
                break;
             }
-            if(other_stats.id == me->get_stats()->id){
+            if(other_stats.id == me.get_stats().id){
                break;
             }
             if(player_num > 1){//lets not waste precious processing power

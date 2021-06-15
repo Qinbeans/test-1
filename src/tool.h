@@ -147,7 +147,7 @@ Vector2 get_delta(float scale, float speed);
  * @param y 
  * @param delta 
  */
-void move(float& x, float& y, Vector2& delta);
+void move(float& x, float& y, Vector2 delta);
 
 /**
  * @brief makes a string from a float

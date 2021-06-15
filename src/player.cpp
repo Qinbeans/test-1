@@ -41,7 +41,9 @@ void player::move(Vector2 delta){
 void player::draw(){
    // printf("(%f,%f),radius:%f\n",pos.x,pos.y,radius);
    DrawCircleV(pos,radius,color);
-   set_style_name(apos_sty,get_str_apos());
+   char* temp = get_str_apos();
+   set_style_name(apos_sty,temp);
+   free(temp);
    draw_lbl(apos_sty,BLACK);
 }
 
@@ -54,15 +56,6 @@ char* player::get_str_apos(){
 
 void player::set_color(Color color){
    this->color = color;
-   // if(ColorToInt(color)==ColorToInt(RED)){
-   //    printf("red");
-   // }else if(ColorToInt(color)==ColorToInt(BLUE)){
-   //    printf("blue");
-   // }else if(ColorToInt(color)==ColorToInt(PURPLE)){
-   //    printf("purple");
-   // }else if(ColorToInt(color)==ColorToInt(WHITE)){
-   //    printf("white");
-   // }
 }
 
 string player::get_packet(){
