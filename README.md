@@ -36,3 +36,8 @@ Installation may vary, but most mainstream package managers have all these avail
 
 # Premise
 This is just a fun little project to get to know code better.  A bonus is that we can play with friends.
+
+# Credits
+All the repositories I used are not mine and I do not take credit for them.<br>
+Nathan Chan<br>
+Ryan Fong<br>
