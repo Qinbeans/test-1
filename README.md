@@ -19,7 +19,6 @@
 -Clang<br>
 -Brew<br>
 -Enet<br>
--OpenMP<br>
 -Raylib<br>
 ### Installation
 -Type the following command into the terminal<br>
