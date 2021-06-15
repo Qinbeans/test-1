@@ -63,7 +63,7 @@ window::window(){
 void window::start(){
    printf("<Initializing...>\n");
    if(!connected()){
-      exit(EXIT_FAILURE); 
+      // exit(EXIT_FAILURE); 
    }
    init();
    InitWindow(width,height,name.c_str());
@@ -76,7 +76,7 @@ void window::start(){
       BeginDrawing();
       ClearBackground(GRAY);
       //makes drawing separate from polling
-      std::async(&window::network_poll,this);
+      // std::async(&window::network_poll,this);
       update();
       EndDrawing();
    }
@@ -111,14 +111,14 @@ void window::init(){
    //button 4: red
    lbl_style(styles[3],"Red",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{scale,scale*10,scale*10,scale*2.5f});
    bound_len++;\
-   me = player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
+   me = new player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
 }
 
 void window::update(){
    // printf("<Updating screen>\n");
-   delta = get_delta(scale,me.get_stats().speed);
-   me.move(delta);
-   me.draw();
+   delta = get_delta(scale,me->get_stats().speed);
+   me->move(delta);
+   me->draw();
    //static layer for self player and buttons
    if(player_num > 0){
       for(short i = 0; i < player_num; i++){
@@ -133,19 +133,19 @@ void window::update(){
          printf("<%d has been clicked>\n",i);
          switch(current){
             case 0:{
-               me.set_color(PURPLE);
+               me->set_color(PURPLE);
                break;
             }
             case 1:{
-               me.set_color(BLUE);
+               me->set_color(BLUE);
                break;
             }
             case 2:{
-               me.set_color(WHITE);
+               me->set_color(WHITE);
                break;
             }
             case 3:{
-               me.set_color(RED);
+               me->set_color(RED);
                break;
             }
          }
@@ -220,7 +220,7 @@ bool window::connected(){
       switch(event.type){
          case ENET_EVENT_TYPE_CONNECT:{
             printf("<Connected to %d:%d>\n",address.host,address.port);
-            string data = "0 "+me.get_packet();
+            string data = "0 "+me->get_packet();
             ENetPacket* user = enet_packet_create(data.c_str(), data.size()+1,ENET_PACKET_FLAG_RELIABLE);
             enet_peer_send(peer, 0, user);
             return true;
@@ -333,7 +333,7 @@ void window::network_poll(){
                }
                break;
             }
-            if(other_stats.id == me.get_stats().id){
+            if(other_stats.id == me->get_stats().id){
                break;
             }
             if(player_num > 1){//lets not waste precious processing power

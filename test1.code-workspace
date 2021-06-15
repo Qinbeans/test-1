@@ -12,7 +12,8 @@
 			"cstdlib": "cpp",
 			"cstring": "cpp",
 			"stdlib.h": "c",
-			"stdio.h": "c"
+			"stdio.h": "c",
+			"string": "cpp"
 		}
 	}
 }

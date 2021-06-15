@@ -5,7 +5,7 @@ DATE = $(shell date '+%Y-%m-%d' )
 TIME = $(shell date '+%H:%M')
 AUTHOR = $(shell git var GIT_AUTHOR_IDENT | cut -d ' ' -f3)
 FILE := test-$(DATE)
-CFLAG := -std=c++17 -Ofast -I include
+CFLAG := -std=c++17 -Ofast -I include -g
 LFLAG := -lpthread -lraylib -lenet 
 
 ifeq ($(OS),Windows_NT)
@@ -20,7 +20,7 @@ else
 	else
 		PLAT := Mac
 		CFLAG += -I /opt/homebrew/include
-		LFLAG += -lomp -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL -L lib/Mac -L /opt/homebrew/lib
+		LFLAG += -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL -L lib/Mac -L /opt/homebrew/lib
 	endif
 endif
 

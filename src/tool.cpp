@@ -44,7 +44,6 @@ void draw_txt(Style style, Color frame_color, char* text, int txt_len, bool edit
    GuiSetStyle(LABEL, TEXT_ALIGNMENT, style.align);
    GuiSetStyle(LABEL, TEXT + (guiState*3), style.color);
    GuiTextBox(style.frame,text,txt_len,edit_mode);
-   free(text);
 }
 
 void set_style_name(Style& style, string name){

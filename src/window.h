@@ -63,7 +63,7 @@ class window{
    private:
       Win_data wdata;
       Stats stats;
-      player me;
+      player* me;
       int width;
       int height;
       float scale;
