@@ -20,7 +20,7 @@ else
 	else
 		PLAT := Mac
 		CFLAG += -I /opt/homebrew/include
-		LFLAG += -lomp -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL -L lib/Mac -L /opt/homebrew/lib
+		LFLAG += -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL -L lib/Mac -L /opt/homebrew/lib
 	endif
 endif
 
