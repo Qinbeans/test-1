@@ -25,6 +25,10 @@
 #include <cstdlib>
 #include <future>
 #include <cstring>
+#include <unistd.h>
+#if defined(unix) || defined(__unix__) || defined(__unix) || defined(__MACH__)
+#include <sys/stat.h>
+#endif
 
 #define MAX_CHUNK 50
 
@@ -65,6 +69,7 @@ void window::start(){
    if(!connected()){
       // exit(EXIT_FAILURE); 
    }
+   printf("<Connection succeded>\n");
    init();
    InitWindow(width,height,name.c_str());
    SetTargetFPS(atoi(settings[3].c_str()));
@@ -130,7 +135,7 @@ void window::update(){
    for(short i = 0; i < bound_len; i++){
       if(draw_lblb(styles[i],BLACK)){
          current = i;
-         printf("<%d has been clicked>\n",i);
+         // printf("<%d has been clicked>\n",i);
          switch(current){
             case 0:{
                me->set_color(PURPLE);
@@ -165,15 +170,22 @@ bool window::connected(){
    }
    printf("<Client created>\n");
    string base_dir = GAMEDIR;
-   if(base_dir == "/AppData/LocalLow/2D_Game"){
+   if(OS == "win"){
       base_dir = getenv("USERPROFILE") + base_dir;
+   }else{
+      base_dir = string(getenv("HOME"))+ "/" + base_dir;
    }
+   printf("<dir: %s>\n",base_dir.c_str());
    string setfile = base_dir+"/settings.inline";
    string gamefile = base_dir+"/gamedata.inline";
 
    //read data
    if(!DirectoryExists(base_dir.c_str())){
       printf("<Game dir:%s does not exists>\n",base_dir.c_str());
+      if((OS == "mac") || (OS == "lin")){
+         printf("mkdir %s\n",base_dir.c_str());
+         mkdir(base_dir.c_str(),0744);
+      }
    }
    if(!FileExists(setfile.c_str())){
       printf("<Settings does not exists>\n");

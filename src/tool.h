@@ -17,10 +17,13 @@ using std::string;
 
 #ifdef __MACH__
 #define GAMEDIR ".2D_Game"
+const string OS="mac";
 #elif defined(_WIN32) || defined(_WIN64)
 #define GAMEDIR "/AppData/LocalLow/2D_Game"
+const string OS="win";
 #else
 #define GAMEDIR ".2Dgame"
+const string OS="lin";
 #endif
 
 
