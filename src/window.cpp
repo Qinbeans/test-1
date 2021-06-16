@@ -19,6 +19,13 @@
  * pos of other players
  * 
  */
+/**
+ * 06/15/21 - Ryan Fong
+ * TODO: Update scale for all necessary objects and functions when
+ * window is resized.
+ * TODO: Fix macos buggy buttons
+ * 
+ */
 
 #include "window.h"
 #include "raygui.h"
@@ -69,9 +76,10 @@ void window::start(){
    if(!connected()){
       // exit(EXIT_FAILURE); 
    }
+   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
    printf("<Connection succeded>\n");
    init();
-   InitWindow(width,height,name.c_str());
+   InitWindow(wdata.width,wdata.height,name.c_str());
    SetTargetFPS(atoi(settings[3].c_str()));
    if(atoi(settings[0].c_str())){
       ToggleFullscreen();
@@ -105,23 +113,29 @@ void window::start(){
 void window::init(){
    //buttons are spread by 3 scales
    //button 1: purple
-   lbl_style(styles[0],"Purple",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(PURPLE),{scale,scale,scale*10,scale*2.5f});
+   lbl_style(styles[0],"Purple",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(PURPLE),{wdata.scale,wdata.scale,wdata.scale*10,wdata.scale*2.5f});
    bound_len ++;
    //button 2: blue
-   lbl_style(styles[1],"Blue",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(BLUE),{scale,scale*4,scale*10,scale*2.5f});
+   lbl_style(styles[1],"Blue",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(BLUE),{wdata.scale,wdata.scale*4,wdata.scale*10,wdata.scale*2.5f});
    bound_len++;
    //button 3: white
-   lbl_style(styles[2],"White",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{scale,scale*7,scale*10,scale*2.5f});
+   lbl_style(styles[2],"White",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{wdata.scale,wdata.scale*7,wdata.scale*10,wdata.scale*2.5f});
    bound_len++; 
    //button 4: red
-   lbl_style(styles[3],"Red",scale*2,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{scale,scale*10,scale*10,scale*2.5f});
+   lbl_style(styles[3],"Red",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{wdata.scale,wdata.scale*10,wdata.scale*10,wdata.scale*2.5f});
    bound_len++;\
-   me = new player(RED,{width/2.0f,height/2.0f},&stats,&wdata);
+   me = new player(RED,{wdata.width/2.0f,wdata.height/2.0f},&stats,&wdata);
 }
 
 void window::update(){
    // printf("<Updating screen>\n");
-   delta = get_delta(scale,me->get_stats().speed);
+   if(check_screen(wdata.width,wdata.height,wdata.scale)){
+      lbl_style(styles[0],"Purple",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(PURPLE),{wdata.scale,wdata.scale,wdata.scale*10,wdata.scale*2.5f});
+      lbl_style(styles[1],"Blue",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(BLUE),{wdata.scale,wdata.scale*4,wdata.scale*10,wdata.scale*2.5f});
+      lbl_style(styles[2],"White",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{wdata.scale,wdata.scale*7,wdata.scale*10,wdata.scale*2.5f});
+      lbl_style(styles[3],"Red",wdata.scale*2,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(RED),{wdata.scale,wdata.scale*10,wdata.scale*10,wdata.scale*2.5f});
+   }
+   delta = get_delta(wdata.scale,me->get_stats().speed);
    me->move(delta);
    me->draw();
    //static layer for self player and buttons
@@ -162,7 +176,7 @@ void window::update(){
 
 bool window::connected(){
    string temp;
-   scale = 480/MAX_CHUNK;
+   wdata.scale = 480/MAX_CHUNK;
    client = enet_host_create(NULL,1,2,0,0);
    if(client == NULL){
       printf("<Bad Client Network, Try Again>\n");
@@ -211,13 +225,11 @@ bool window::connected(){
    temp = LoadFileText(gamefile.c_str());
    parse(saved_stats,32,temp);
    stats = {saved_stats[0],saved_stats[1],(float)atof(saved_stats[2].c_str()),(float)atof(saved_stats[3].c_str()),(float)atof(saved_stats[4].c_str()),(float)atof(saved_stats[5].c_str()),(float)atof(saved_stats[6].c_str()),(float)atof(saved_stats[7].c_str())};
-   width = (float)atof(settings[1].c_str());
-   height = (float)atof(settings[2].c_str());
-   scale = height/MAX_CHUNK;
+
    // printf("Width:%f Height:%f\n",width,height);
-   wdata.scale = scale;
-   wdata.width = width;
-   wdata.height = height;
+   wdata.width = (float)atof(settings[1].c_str());
+   wdata.height = (float)atof(settings[2].c_str());
+   wdata.scale = wdata.height/MAX_CHUNK;
 
    enet_address_set_host(&address,settings[4].c_str());
    address.port = stoi(settings[5]);
@@ -251,15 +263,15 @@ bool window::connected(){
 
 string window::new_player(){
    SetTargetFPS(30);
-   float buffer = scale * 2;
+   float buffer = wdata.scale * 2;
    string inputs;
    bool submit = false;
    short box_num = 3;
    char* temp[box_num-1];
-   float width_box = scale*20;
-   float height_box = scale*4;
-   float box_x = scale*20;
-   float box_ys[] = {scale,scale*7,scale*13,scale*19,scale*25,scale*31}; //last is submit button
+   float width_box = wdata.scale*20;
+   float height_box = wdata.scale*4;
+   float box_x = wdata.scale*20;
+   float box_ys[] = {wdata.scale,wdata.scale*7,wdata.scale*13,wdata.scale*19,wdata.scale*25,wdata.scale*31}; //last is submit button
    Style menu_styles[box_num];
    short curr_box = 0;//0-4
    for(int i = 0; i < box_num; i++){
@@ -267,15 +279,15 @@ string window::new_player(){
       if(temp[i]!=NULL){
          switch(i){
             case 0:{
-               lbl_style(menu_styles[i],std::to_string(i),scale*3,scale/2,GUI_TEXT_ALIGN_LEFT,ColorToInt(WHITE),{box_x,box_ys[i],width_box,height_box});
+               lbl_style(menu_styles[i],std::to_string(i),wdata.scale*3,wdata.scale/2,GUI_TEXT_ALIGN_LEFT,ColorToInt(WHITE),{box_x,box_ys[i],width_box,height_box});
                strcpy(temp[i],"Username");
                break;
             }case 1:{
-               lbl_style(menu_styles[i],std::to_string(i),scale*3,scale/2,GUI_TEXT_ALIGN_LEFT,ColorToInt(WHITE),{box_x,box_ys[i],width_box,height_box});
+               lbl_style(menu_styles[i],std::to_string(i),wdata.scale*3,wdata.scale/2,GUI_TEXT_ALIGN_LEFT,ColorToInt(WHITE),{box_x,box_ys[i],width_box,height_box});
                strcpy(temp[i],"0000ID");
                break;
             }case 2:{
-               lbl_style(menu_styles[i],"Submit",scale*3,scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{box_x,box_ys[i],scale*10,height_box});
+               lbl_style(menu_styles[i],"Submit",wdata.scale*3,wdata.scale/2,GUI_TEXT_ALIGN_CENTER,ColorToInt(WHITE),{box_x,box_ys[i],wdata.scale*10,height_box});
             }
          }
       }
@@ -330,7 +342,7 @@ void window::network_poll(){
             string packet_data = (char*)event.packet->data;
             parse(parsed_data,32,packet_data);
             Color other_color = GetColor(stoi(parsed_data[9]));
-            Vector2 other_pos = {stof(parsed_data[7])*scale,stof(parsed_data[8])*scale};
+            Vector2 other_pos = {stof(parsed_data[7])*wdata.scale,stof(parsed_data[8])*wdata.scale};
             Stats other_stats = {parsed_data[1],parsed_data[2],stof(parsed_data[3]),stof(parsed_data[4]),stof(parsed_data[5]),stof(parsed_data[6])};
             player other_p(other_color,{0,0},&other_stats,&wdata);
             //search for name in players

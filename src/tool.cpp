@@ -13,6 +13,7 @@
 #include "tool.h"
 #include "raylib.h"
 #include "raygui.h"
+#define MAX_CHUNK 50
 
 
 void lbl_style(Style& style,string name, float font, float spacing,int align, int color, Rectangle2D frame){
@@ -90,4 +91,29 @@ void parse(string strong_data[MAX_DATA], const char delim, string data){
 
 void print_stats(Stats stats){
    printf("Stats: %s %s %.2f %.2f %.2f %.2f %.2f %.2f\n",stats.name.c_str(),stats.id.c_str(),stats.xp,stats.speed,stats.health,stats.armor,stats.range,stats.damage);
+}
+
+bool check_screen(int& width, int& height, float& scale){
+   if(GetScreenWidth()!=width){
+      width=GetScreenWidth();
+      return true;
+   }
+   if(GetScreenHeight()!=height){
+      height=GetScreenHeight();
+      scale=GetScreenHeight()/MAX_CHUNK;
+      return true;
+   }
+   return false;
+}
+
+void set_sty_font(Style& style, float font){
+   style.font=font;
+}
+
+void set_sty_spacing(Style& style, float spacing){
+   style.spacing=spacing;
+}
+
+void set_sty_rect(Style& style, Rectangle2D rect){
+   style.frame=rect;
 }

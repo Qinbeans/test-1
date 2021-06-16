@@ -1,3 +1,8 @@
+# Todo list
+- (06/15/21) Update scale for all necessary objects and functions when window is resized.<br>
+- (06/15/21) Fix macos buggy buttons on "new player" menu<br>
+# Complete List
+- (05/29/21) Use a new grid made by the server to keep track of position and send delta to change position.  All positions from the server are subtracted from our pos to get relative pos of other players
 # Instructions
 This will initialize the folders required for making the game and only needs to be ran once.<br>
  ```make init```<br>

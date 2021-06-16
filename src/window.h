@@ -64,9 +64,6 @@ class window{
       Win_data wdata;
       Stats stats;
       player* me;
-      int width;
-      int height;
-      float scale;
       string name;
       Vector2 delta;
       float dT;//delta Time checks time it took to finish frame

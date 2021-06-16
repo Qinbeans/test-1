@@ -162,4 +162,12 @@ char* to_string(float num);
 
 void parse(string strong_data[MAX_DATA], const char delim, string data);
 
+bool check_screen(int& width, int& height, float& scale);
+
 void print_stats(Stats stats);
+
+void set_sty_font(Style& style, float font);
+
+void set_sty_spacing(Style& style, float spacing);
+
+void set_sty_rect(Style& style, Rectangle2D rect);

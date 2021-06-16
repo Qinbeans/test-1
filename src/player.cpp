@@ -21,7 +21,9 @@ player::player(Color color, Vector2 pos, Stats* stats, Win_data* window){
    pos_act = {0,0};
    this->stats = stats;
    this->window = window;
-   lbl_style(apos_sty,get_str_apos(),window->scale,window->scale/4,GUI_TEXT_ALIGN_CENTER,ColorToInt(GREEN),{window->width-window->scale*11,window->scale*2.5f,window->scale*10,window->scale*1.5f});
+   char* temp = get_str_apos();
+   lbl_style(apos_sty,temp,window->scale,window->scale/4,GUI_TEXT_ALIGN_CENTER,ColorToInt(GREEN),{window->width-window->scale*11,window->scale*2.5f,window->scale*10,window->scale*1.5f});
+   free(temp);
 }
 
 player::~player(){
@@ -40,7 +42,14 @@ void player::move(Vector2 delta){
 
 void player::draw(){
    // printf("(%f,%f),radius:%f\n",pos.x,pos.y,radius);
+   // printf("<W:%d H:%d S:%f>\n",window->width,window->height,window->scale);
+   pos.x=window->width/2.0f;
+   pos.y=window->height/2.0f;
+   radius=window->scale/2;
    DrawCircleV(pos,radius,color);
+   set_sty_font(apos_sty,window->scale);
+   set_sty_spacing(apos_sty,window->scale/4);
+   set_sty_rect(apos_sty,{window->width-window->scale*11,window->scale*2.5f,window->scale*10,window->scale*1.5f});
    char* temp = get_str_apos();
    set_style_name(apos_sty,temp);
    free(temp);

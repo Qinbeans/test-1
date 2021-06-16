@@ -13,7 +13,8 @@
 			"cstring": "cpp",
 			"stdlib.h": "c",
 			"stdio.h": "c",
-			"string": "cpp"
+			"string": "cpp",
+			"ios": "cpp"
 		}
 	}
 }
