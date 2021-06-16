@@ -44,5 +44,6 @@ I tried to make a more fluid way of making commits by adding date, time, and use
 
 # Credits
 All the repositories I used are not mine and I do not take credit for them.<br>
+Raylib has been modified to prevent library function collisions.<br>
 Nathan Chan<br>
 Ryan Fong<br>
