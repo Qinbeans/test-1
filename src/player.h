@@ -101,6 +101,7 @@ class player{
       Stats* stats;
       Win_data* window;
       float radius;
+      Vector2 sword;
       Style apos_sty;//for labels and such
 };
 

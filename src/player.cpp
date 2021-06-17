@@ -1,5 +1,6 @@
 #include "player.h"
 #include "raygui.h"
+#include "raymath.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
@@ -41,11 +42,15 @@ void player::move(Vector2 delta){
 }
 
 void player::draw(){
+   float tmpr = (window->scale*stats->range)+radius;
+   float theta = atan2f(GetMousePosition().y-pos.y,GetMousePosition().x-pos.x);
+   sword = {pos.x+tmpr*cosf(theta),pos.y+tmpr*sinf(theta)};
    // printf("(%f,%f),radius:%f\n",pos.x,pos.y,radius);
    // printf("<W:%d H:%d S:%f>\n",window->width,window->height,window->scale);
    pos.x=window->width/2.0f;
    pos.y=window->height/2.0f;
    radius=window->scale/2;
+   DrawLineEx(pos,sword,window->scale/4,LIGHTGRAY);
    DrawCircleV(pos,radius,color);
    set_sty_font(apos_sty,window->scale);
    set_sty_spacing(apos_sty,window->scale/4);
@@ -59,7 +64,7 @@ void player::draw(){
 char* player::get_str_apos(){
    //some idiot will break this i swear, jumping off the map will seg fault
    char* str = (char*)malloc(1000);//might want to think about making this dynamic somehow
-   sprintf(str,"(%.1f,%.1f)",pos_act.x/window->scale,pos_act.y/window->scale);
+   sprintf(str,"(%.0f,%.0f)",pos_act.x/window->scale,(pos_act.y/window->scale)*-1);
    return str;
 }
 
