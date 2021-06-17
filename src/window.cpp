@@ -21,7 +21,7 @@
  */
 /**
  * 06/15/21 - Ryan Fong
- * TODO: Update scale for all necessary objects and functions when
+ * TODO:(COMPLETE 06/26/21) Update scale for all necessary objects and functions when
  * window is resized.
  * TODO: Fix macos buggy buttons
  * 
@@ -73,7 +73,7 @@ window::window(){
 // UNCOMMENT SOMETHING HERE
 void window::start(){
    printf("<Initializing...>\n");
-   if(!connected()){
+   if(!connected()){//<-causes seg fault if it can't connect
       // exit(EXIT_FAILURE); 
    }
    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -143,7 +143,7 @@ void window::update(){
       for(short i = 0; i < player_num; i++){
          // account for distance
          // if(players[i].get_apos().x > 0 && players[i].get_apos().x < width && players[i].get_apos().y > 0 && players[i].get_apos().x < height)
-         players[i].draw();
+         players[i].draw_outsider();
       }
    }
    for(short i = 0; i < bound_len; i++){
@@ -324,12 +324,13 @@ string window::new_player(){
    inputs+=temp[0];
    inputs+=" ";
    inputs+=temp[1];
-   inputs+=" 0.0 1.0 0.5 0.1 0 0 0\0";
+   inputs+=" 0.0 1.0 0.5 0.1 0.2 0";
    free(temp[0]);
    free(temp[1]);
    return inputs;
 }
 
+//someone read over this
 void window::network_poll(){
    printf("<Polling network>\n");
    int status = enet_host_service(client, &event, 10);

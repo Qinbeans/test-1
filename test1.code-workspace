@@ -16,5 +16,25 @@
 			"string": "cpp",
 			"ios": "cpp"
 		}
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Start",
+				"type": "shell",
+				"command": ["git","status"]
+			},
+			{
+				"label": "make",
+				"type": "shell",
+				"command": ["make"]
+			},
+			{
+				"label": "clean",
+				"type": "shell",
+				"command": ["make","clean"]
+			}
+		]
 	}
 }

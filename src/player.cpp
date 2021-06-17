@@ -61,6 +61,11 @@ void player::draw(){
    draw_lbl(apos_sty,BLACK);
 }
 
+//Fill out what to do for player that's not the current client
+void player::draw_outsider(){
+   //
+}
+
 char* player::get_str_apos(){
    //some idiot will break this i swear, jumping off the map will seg fault
    char* str = (char*)malloc(1000);//might want to think about making this dynamic somehow
