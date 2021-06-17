@@ -196,10 +196,10 @@ bool window::connected(){
    //read data
    if(!DirectoryExists(base_dir.c_str())){
       printf("<Game dir:%s does not exists>\n",base_dir.c_str());
-      if((OS == "mac") || (OS == "lin")){
+      #if defined(unix) || defined(__unix__) || defined(__unix) || defined(__MACH__)
          printf("mkdir %s\n",base_dir.c_str());
          mkdir(base_dir.c_str(),0744);
-      }
+      #endif
    }
    if(!FileExists(setfile.c_str())){
       printf("<Settings does not exists>\n");
