@@ -18,12 +18,13 @@
  * subtracted from our pos to get relative
  * pos of other players
  * 
- */
-/**
  * 06/15/21 - Ryan Fong
- * TODO:(COMPLETE 06/26/21) Update scale for all necessary objects and functions when
+ * TODO:(COMPLETE 6/15/21) Update scale for all necessary objects and functions when
  * window is resized.
- * TODO: Fix macos buggy buttons
+ * TODO:(COMPLETE 6/21/21) Fix macos buggy buttons
+ * 
+ * 06/21/21 - Ryan Fong
+ * TODO: Complete networking with server
  * 
  */
 
@@ -73,7 +74,7 @@ window::window(){
 // UNCOMMENT SOMETHING HERE
 void window::start(){
    printf("<Initializing...>\n");
-   if(!connected()){//<-causes seg fault if it can't connect
+   if(!connected()){
       // exit(EXIT_FAILURE); 
    }
    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -143,7 +144,7 @@ void window::update(){
       for(short i = 0; i < player_num; i++){
          // account for distance
          // if(players[i].get_apos().x > 0 && players[i].get_apos().x < width && players[i].get_apos().y > 0 && players[i].get_apos().x < height)
-         players[i].draw_outsider();
+         players[i].draw();
       }
    }
    for(short i = 0; i < bound_len; i++){
@@ -277,6 +278,7 @@ string window::new_player(){
    for(int i = 0; i < box_num; i++){
       temp[i]=(char*)malloc(10);
       if(temp[i]!=NULL){
+         printf("<i: %d,x: %f,y: %f>\n",i,box_x,box_ys[i]);
          switch(i){
             case 0:{
                lbl_style(menu_styles[i],std::to_string(i),wdata.scale*3,wdata.scale/2,GUI_TEXT_ALIGN_LEFT,ColorToInt(WHITE),{box_x,box_ys[i],width_box,height_box});
@@ -291,14 +293,16 @@ string window::new_player(){
             }
          }
       }
-   }
+   }//mac corrupts box_ys so I redeclare it as tempys
+   float tempy[] = {wdata.scale,wdata.scale*7,wdata.scale*13,wdata.scale*19,wdata.scale*25,wdata.scale*31};
    while(!WindowShouldClose()&&!submit){
       BeginDrawing();
       ClearBackground(GRAY);
       for(int i = 0; i < box_num;i++){
          //check event for pressing box
          if(i < 2){
-            if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(),{box_x,box_ys[i],width_box,height_box})){
+            if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(),{box_x,tempy[i],width_box,height_box})){
+               printf("Current: %d, i: %d,x: %f,y: %f\n",curr_box,i,box_x,tempy[i]);
                curr_box = i;
             }
             if(i==1 && strlen(temp[i])>6){
@@ -324,13 +328,12 @@ string window::new_player(){
    inputs+=temp[0];
    inputs+=" ";
    inputs+=temp[1];
-   inputs+=" 0.0 1.0 0.5 0.1 0.2 0";
+   inputs+=" 0.0 1.0 0.5 0.1 0 0 0\0";
    free(temp[0]);
    free(temp[1]);
    return inputs;
 }
 
-//someone read over this
 void window::network_poll(){
    printf("<Polling network>\n");
    int status = enet_host_service(client, &event, 10);
